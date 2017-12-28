@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GitHub Profile Finder</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style>
+		img{
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<form id="userForm">
+			<div class="form-group">
+				<label>Github Username</label>
+				<input type="text" id="username" class="form-control">
+
+			</div>
+		</form>
+	<div id="profile"></div>
+</div>
+<script>
+function getProfile(e){
+	e.preventDefault();
+	console.log("getting details")
+	var username=document.getElementById('username').value;
+	if(!username|| username==""){
+		username='sumitkumarsharma1990';
+	}
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange=function(){
+
+		if(xhttp.readyState==4 && xhttp.status==200){
+			//var user=xhttp.responseText;
+			var user= JSON.parse(xhttp.responseText); 
+			console.log(user.name);
+			document.getElementById('profile').innerHTML = `<div class="panel panel-default">
+  				<div class="panel-heading">
+   				 <h3 class="panel-title">${user.login}</h3>
+  					</div>
+  					<div class="panel-body">
+  				  <div class="row">
+  				  <div class="col-md-3">
+  				  <img src="${user.avatar_url}">
+  				  </div>
+  				  <div class="col-md-9">
+  				  <span class="label label-primary">Public Repose ${user.public_repos}</span>
+  				   <span class="label label-danger">Public gists ${user.public_gists}</span>
+  				  <br><br>
+  				  <ul class="list-group">
+  				  <li> Website:${user.blog}</li>
+  				  <li> Website:${user.following_url}</li>
+  				  <li> Website:${user.email}</li>
+  				  
+  				  </ul>
+  				  <a class="btn btn-default" target="_blank" href="${user.html_url}">Visit Github</a>
+  				  </div>
+  				  </div>
+  					</div>
+					</div>`;
+		}
+	}
+	xhttp.open('GET','https://api.github.com/users/'+username,true);
+	xhttp.send();
+}
+	document.getElementById('userForm').addEventListener('submit', getProfile, false);
+
+
+</script>
+</body>
+</html>
